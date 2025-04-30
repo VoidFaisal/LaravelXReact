@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -21,23 +20,25 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
-        //
+       $input = $request->validate(['body'=>'required']);
+        Post::create($input);
+        return redirect('/');
     }
-
+    
     /**
      * Display the specified resource.
      */
     public function show(Post $post)
     {
-        //
+       return inertia('ShowSinglePost',['post'=>$post]);
     }
 
     /**
@@ -51,7 +52,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(Request $request, Post $post)
     {
         //
     }
@@ -61,6 +62,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+       $post->delete();
+       return redirect ('/')->with('message','The Post was Deleted Successfully!');
     }
 }
